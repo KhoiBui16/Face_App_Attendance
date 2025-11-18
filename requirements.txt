@@ -1,0 +1,10 @@
+streamlit
+tensorflow
+numpy
+opencv-python-headless
+mtcnn
+scikit-learn
+pandas 
+pytz
+
+pyyaml
