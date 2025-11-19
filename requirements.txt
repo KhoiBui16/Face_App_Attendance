@@ -6,5 +6,5 @@ mtcnn
 scikit-learn
 pandas 
 pytz
-
+filelock
 pyyaml
