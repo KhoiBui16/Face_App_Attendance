@@ -1,115 +1,77 @@
 # Face App Attendance 📘
-
-Ứng dụng điểm danh bằng nhận diện khuôn mặt, kết hợp kiểm tra chống giả mạo và nhận diện cảm xúc.
-
+Attendance application using face recognition, combined with anti-spoofing detection and emotion recognition.
 ---
-
-## 1. Yêu cầu hệ thống (Prerequisites)
-
-Trước khi bắt đầu, đảm bảo máy tính đã cài đặt:
-
-- **Python**: 3.8 – 3.10 (Khuyên dùng 3.10 cho TensorFlow)
-- **Git**: Để clone mã nguồn
-- **Git LFS**: Để tải các file model nặng (rất quan trọng)
-
+## 1. System Requirements (Prerequisites)
+Before starting, ensure your computer has:
+- **Python**: 3.8 – 3.10 (3.10 recommended for TensorFlow)
+- **Git**: To clone the source code
+- **Git LFS**: To download large model files (very important)
 ---
-
-## 2. Cài đặt chi tiết (Installation)
-
-### Bước 1: Clone dự án
-
+## 2. Detailed Installation (Installation)
+### Step 1: Clone the project
 ```bash
 git clone https://github.com/KhoiBui16/Face_App_Attendance.git
 cd Face_App_Attendance
 ```
-
-### Bước 2: Tạo môi trường ảo (Virtual Environment)
-
+### Step 2: Create Virtual Environment
 ```bash
 # Windows
 python -m venv venv
 .\venv\Scripts\activate
-
 # macOS / Linux
 python3 -m venv venv
 source venv/bin/activate
 ```
-
-### Bước 3: Cài đặt thư viện
-
+### Step 3: Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
-
-> Lưu ý: Kiểm tra `requirements.txt` để xóa dòng thừa nếu có copy/paste lỗi.
-
-### Bước 4: Chuẩn bị Models
-
-Tạo thư mục `models/` ở thư mục gốc, sau đó thêm các file:
-
-- `ResNet50_feature_extractor.keras` – Model trích xuất đặc trưng khuôn mặt
-- `anti_spoof_model.h5` – Model chống giả mạo
-- `emotion_model.h5` – Model nhận diện cảm xúc
-
-> Nếu vừa clone từ Git và dùng Git LFS, chạy:
-
+> Note: Check `requirements.txt` to remove any redundant lines if there are copy/paste errors.
+### Step 4: Prepare Models
+Create a `models/` folder in the root directory, then add these files:
+- `ResNet50_feature_extractor.keras` – Face feature extraction model
+- `anti_spoof_model.h5` – Anti-spoofing model
+- `emotion_model.h5` – Emotion recognition model
+> If you just cloned from Git and are using Git LFS, run:
 ```bash
 git lfs pull
 ```
-
-để tải file về nếu chưa đầy đủ.
-
-### Bước 5: Tạo cấu hình đăng nhập (Tùy chọn)
-
+to download files if they're not complete.
+### Step 5: Create login configuration (Optional)
 ```bash
 python generate_keys.py
 ```
-
-> Lệnh này tạo file `config.yaml` chứa thông tin user Admin.
-
+> This command creates a `config.yaml` file containing Admin user information.
 ---
-
-## 3. Chạy ứng dụng (Running the App)
-
+## 3. Running the Application (Running the App)
 ```bash
 streamlit run app.py
 ```
-
-Trình duyệt sẽ tự động mở: [http://localhost:8501](http://localhost:8501)
-
+The browser will automatically open: [http://localhost:8501](http://localhost:8501)
 ---
-
-## 4. Cấu trúc dự án (Project Structure)
-
+## 4. Project Structure (Project Structure)
 ```
 Face_App_Attendance/
-├── app.py                  # [MAIN] Giao diện chính
-├── face_processing.py      # [CORE] Xử lý AI: load model, detect mặt, embedding
-├── db.py                   # [DATABASE] Lưu/Xóa user, log CSV
-├── generate_keys.py        # [UTIL] Mã hóa mật khẩu & tạo config.yaml
-├── requirements.txt        # Thư viện cần thiết
-├── models/                 # [DATA] File .keras, .h5
+├── app.py                  # [MAIN] Main interface
+├── face_processing.py      # [CORE] AI processing: load model, detect face, embedding
+├── db.py                   # [DATABASE] Save/Delete user, log CSV
+├── generate_keys.py        # [UTIL] Password encryption & create config.yaml
+├── requirements.txt        # Required libraries
+├── models/                 # [DATA] .keras, .h5 files
 │   ├── ResNet50_feature_extractor.keras
 │   ├── anti_spoof_model.h5
 │   └── emotion_model.h5
-├── face_db/                # [DATA] File .pkl chứa embedding người dùng
-└── attendance_log.csv      # [LOG] Lưu lịch sử điểm danh
+├── face_db/                # [DATA] .pkl files containing user embeddings
+└── attendance_log.csv      # [LOG] Stores attendance history
 ```
-
-**Luồng hoạt động:**
-
-- **Đăng ký:** app.py chụp ảnh → face_processing.py kiểm tra Spoof → tạo Embedding → db.py lưu vào `face_db/`
-- **Điểm danh:** app.py chụp ảnh → face_processing.py tạo Embedding mới → so sánh Cosine Similarity → trả kết quả + cảm xúc → db.py ghi vào `attendance_log.csv`
-
+**Workflow:**
+- **Registration:** app.py captures photo → face_processing.py checks Spoof → creates Embedding → db.py saves to `face_db/`
+- **Attendance:** app.py captures photo → face_processing.py creates new Embedding → compares Cosine Similarity → returns result + emotion → db.py writes to `attendance_log.csv`
 ---
-
-## 5. Triển khai lên Web (Deploy)
-
-### Bước 1: Chuẩn bị GitHub
-
-- Đảm bảo code đã push lên GitHub với **Git LFS**.
-- Chỉnh sửa `requirements.txt`:
-
+## 5. Web Deployment (Deploy)
+### Step 1: Prepare GitHub
+- Ensure code is pushed to GitHub with **Git LFS**.
+- Edit `requirements.txt`:
 ```
 streamlit
 tensorflow-cpu
@@ -121,30 +83,20 @@ pandas
 pytz
 pyyaml
 ```
-
-### Bước 2: Tạo `packages.txt` cho OpenCV
-
-- Tạo file `packages.txt` ở thư mục gốc, thêm:
-
+### Step 2: Create `packages.txt` for OpenCV
+- Create a `packages.txt` file in the root directory, add:
 ```
 libgl1
 ```
-
-### Bước 3: Deploy trên Streamlit Community Cloud
-
-1. Truy cập [share.streamlit.io](https://share.streamlit.io)
-2. Đăng nhập bằng GitHub
-3. Chọn **New app** → chọn repo `Face_App_Attendance` → branch `main` → main file `app.py` → Deploy
-
-**Lưu ý:**
-
-- Nếu OOM (Out of Memory) do TensorFlow/ResNet50 → cân nhắc dùng model nhẹ hơn như MobileNetV2 hoặc deploy trên Hugging Face Spaces/Render
-- Lần đầu deploy với Git LFS có thể tải chậm, kiên nhẫn chờ
-
+### Step 3: Deploy on Streamlit Community Cloud
+1. Visit [share.streamlit.io](https://share.streamlit.io)
+2. Login with GitHub
+3. Select **New app** → choose `Face_App_Attendance` repo → `main` branch → main file `app.py` → Deploy
+**Notes:**
+- If OOM (Out of Memory) occurs due to TensorFlow/ResNet50 → consider using lighter models like MobileNetV2 or deploy on Hugging Face Spaces/Render
+- First deployment with Git LFS may be slow to load, please be patient
 ---
-
-## 6. Lưu ý thêm
-
-- Luôn track **file lớn bằng LFS trước commit**
-- Nếu commit cũ chứa file >100MB, cần **rewrite history** để push thành công
-- Clone lại repo nếu dùng force-push history cũ
+## 6. Additional Notes
+- Always track **large files with LFS before commit**
+- If old commits contain files >100MB, you need to **rewrite history** to push successfully
+- Clone the repo again if using force-push on old history
